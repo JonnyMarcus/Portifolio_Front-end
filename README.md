@@ -89,12 +89,12 @@ Projetos complexos e impactantes para demonstrar nível profissional.
 
 # 🔥 Diferenciais do Portfólio
 
-✅ Projetos organizados por evolução técnica;
-✅ Interfaces modernas e responsivas;
-✅ Aplicações com foco real de mercado;
-✅ Arquitetura escalável;
-✅ Design desenvolvido no Figma;
-✅ Utilização de boas práticas modernas;
+✅ Projetos organizados por evolução técnica
+✅ Interfaces modernas e responsivas
+✅ Aplicações com foco real de mercado
+✅ Arquitetura escalável
+✅ Design desenvolvido no Figma
+✅ Utilização de boas práticas modernas
 
 ---
 
