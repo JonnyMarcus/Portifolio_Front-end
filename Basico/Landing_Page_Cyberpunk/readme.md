@@ -1,161 +1,86 @@
-````md id="k4m7pz"
-<h1 align="center">
-  🌌 Landing Page Cyberpunk
-</h1>
+# 🚀 Landing Page - Portfólio Cyberpunk
 
-<p align="center">
-  Uma landing page moderna, responsiva e futurista desenvolvida para praticar fundamentos de Frontend e UI/UX.
-</p>
+Uma landing page moderna inspirada na estética **Cyberpunk**, desenvolvida para apresentar meu perfil profissional, projetos, serviços e conhecimentos de forma visualmente atrativa e responsiva.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-00F7FF?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Nível-Básico-blue?style=for-the-badge"/>
-</p>
+## 📖 Sobre o Projeto
 
----
+Este projeto foi desenvolvido com o objetivo de praticar conceitos de **HTML**, **CSS** e **Design Responsivo**, criando uma experiência moderna com elementos visuais inspirados em tecnologia, programação e cultura cyberpunk.
 
-# 🚀 Sobre o Projeto
+A página apresenta:
 
-A proposta deste projeto é criar uma landing page moderna inspirada em interfaces futuristas e no estilo cyberpunk, focando em:
+- 👨‍💻 Apresentação pessoal
+- 📂 Projetos em destaque
+- 🛠️ Serviços oferecidos
+- 📚 Tecnologias e conhecimentos
+- 📬 Informações de contato
 
-- Design moderno
-- Responsividade
-- Experiência do usuário
-- Estruturação semântica
-- Animações suaves
-- Organização de código
+## ✨ Funcionalidades
 
-O projeto simula a página principal de uma startup fictícia de tecnologia.
+- Layout responsivo
+- Design moderno e minimalista
+- Efeitos visuais inspirados em Cyberpunk
+- Navegação simples e intuitiva
+- Seções organizadas para portfólio profissional
+- Integração com GitHub e redes sociais
 
----
+## 🛠️ Tecnologias Utilizadas
 
-# 🧠 Tecnologias Utilizadas
+- HTML5
+- CSS3
+- Font Awesome
+- Google Fonts
 
-<div align="center">
+## 🎨 Design
 
-<img src="https://skillicons.dev/icons?i=html,css,js,figma,vscode,git,github" />
+O projeto utiliza uma paleta de cores escuras com destaques em neon para transmitir uma identidade visual tecnológica e futurista.
 
-</div>
+### Cores Principais
 
----
+- `#050816`
+- `#070B1C`
+- `#FF4D8D`
+- `#8B5CF6`
+- `#00D9FF`
+- `#FFFFFF`
 
-# 🎨 Protótipo
-
-O design da interface foi planejado no Figma antes do desenvolvimento.
-
----
-
-# ⚙️ Funcionalidades
-
-✅ Layout totalmente responsivo  
-✅ Navbar moderna  
-✅ Hero section animada  
-✅ Botões interativos  
-✅ Scroll suave  
-✅ Cards informativos  
-✅ Seção sobre serviços  
-✅ Footer estilizado  
-✅ Efeitos visuais futuristas
-
----
-
-# 📂 Estrutura do Projeto
+## 📂 Estrutura do Projeto
 
 ```bash
-Landing_Page_Cyberpunk/
+Landing_Page_Portfolio/
 │
 ├── assets/
 │   ├── images/
-│   └── icons/
+│   ├── icons/
+│   └── fonts/
 │
 ├── css/
 │   └── style.css
 │
-├── js/
-│   └── script.js
-│
 ├── index.html
+│
 └── README.md
 ```
-````
 
----
+## 🎯 Objetivos de Aprendizado
 
-# 📱 Responsividade
-
-A aplicação foi desenvolvida utilizando conceitos de:
-
+- Estruturação semântica com HTML
 - Flexbox
-- CSS Grid
-- Media Queries
-
-garantindo compatibilidade entre:
-
-- Desktop
-- Tablet
-- Smartphone
-
----
-
-# 🎯 Objetivos de Aprendizado
-
-Este projeto foi criado para praticar:
-
-- HTML semântico
-- Estruturação de páginas
-- CSS moderno
 - Responsividade
-- Manipulação do DOM
-- Organização Frontend
-- UI/UX básico
+- Organização de projetos Front-End
+- Boas práticas de CSS
+- Criação de interfaces modernas
 
----
+## 📸 Preview
 
-# 🔥 Diferenciais
+Em breve.
 
-✨ Interface inspirada em jogos futuristas
-✨ Visual neon/cyberpunk
-✨ Experiência visual moderna
-✨ Estrutura organizada para escalabilidade
+## 🔗 Links
 
----
+- GitHub: https://github.com/JonnyMarcus
+- LinkedIn: Em breve
 
-# 📸 Preview
+## 👨‍💻 Autor
 
-<p align="center">
-  🚧 Preview em desenvolvimento 🚧
-</p>
+Desenvolvido por **Jonny Marcus**
 
----
-
-# ▶️ Como Executar
-
-```bash
-# Clone o repositório
-git clone https://github.com/JonnyMarcus/Landing_Page_Cyberpunk.git
-
-# Abra a pasta
-cd Landing_Page_Cyberpunk
-
-# Execute o index.html
-```
-
----
-
-# 📈 Melhorias Futuras
-
-- Adicionar dark/light mode
-- Implementar animações avançadas
-- Criar versão React
-- Melhorar acessibilidade
-- Adicionar backend futuramente
-
----
-
-# 👨‍💻 Autor
-
-Desenvolvido por Jonny Marcus 🚀
-
-```
-
-```
+Estudante de Ciência da Computação e apaixonado por tecnologia, desenvolvimento web e criação de experiências digitais.
