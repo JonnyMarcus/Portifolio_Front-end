@@ -1,0 +1,2151 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Financeiro — DPR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+      :root {
+        --bg: #0a0a0f;
+        --bg2: #12121a;
+        --card: #1a1a28;
+        --card2: #1f1f30;
+        --border: rgba(255, 255, 255, 0.07);
+        --border2: rgba(255, 255, 255, 0.12);
+        --text: #e2e8f0;
+        --muted: #64748b;
+        --muted2: #94a3b8;
+        --green: #22d3a5;
+        --green2: #16a34a;
+        --red: #f87171;
+        --red2: #dc2626;
+        --blue: #60a5fa;
+        --blue2: #2563eb;
+        --amber: #fbbf24;
+        --purple: #a78bfa;
+        --cyan: #38bdf8;
+        --orange: #fb923c;
+        --r12: 12px;
+        --r16: 16px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      /* HEADER */
+      .header {
+        background: linear-gradient(
+          135deg,
+          #0f0f1a 0%,
+          #1a1a2e 50%,
+          #0f0f1a 100%
+        );
+        border-bottom: 1px solid var(--border2);
+        padding: 32px 40px 28px;
+        position: relative;
+        overflow: hidden;
+      }
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        left: -60px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(96, 165, 250, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .header::after {
+        content: "";
+        position: absolute;
+        bottom: -80px;
+        right: 100px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(34, 211, 165, 0.06) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .header-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+      }
+      .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .logo-icon {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+      }
+      .header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.3px;
+      }
+      .header h1 span {
+        color: var(--cyan);
+      }
+      .header-sub {
+        font-size: 13px;
+        color: var(--muted2);
+        margin-top: 2px;
+      }
+      .header-meta {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .header-badge {
+        background: rgba(96, 165, 250, 0.12);
+        border: 1px solid rgba(96, 165, 250, 0.25);
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 5px 12px;
+        border-radius: 20px;
+      }
+      .header-date {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* MAIN */
+      .main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 32px 40px 60px;
+      }
+
+      /* SECTION TITLES */
+      .section-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--muted2);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* FILTERS */
+      .filters {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r16);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      .filter-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .filter-group {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        background: transparent;
+        border: 1px solid var(--border2);
+        color: var(--muted2);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 6px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "Inter", sans-serif;
+      }
+      .filter-btn:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .filter-btn.active {
+        background: var(--blue2);
+        border-color: var(--blue2);
+        color: #fff;
+        box-shadow: 0 0 12px rgba(37, 99, 235, 0.35);
+      }
+      .filter-sep {
+        width: 1px;
+        height: 28px;
+        background: var(--border);
+      }
+
+      /* KPI CARDS */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 14px;
+        margin-bottom: 32px;
+      }
+      .kpi-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r16);
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          border-color 0.2s;
+        cursor: default;
+      }
+      .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        border-color: var(--border2);
+      }
+      .kpi-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: var(--r16) var(--r16) 0 0;
+      }
+      .kpi-card.green::before {
+        background: linear-gradient(90deg, var(--green), var(--cyan));
+      }
+      .kpi-card.red::before {
+        background: linear-gradient(90deg, var(--red), #f97316);
+      }
+      .kpi-card.blue::before {
+        background: linear-gradient(90deg, var(--blue), var(--purple));
+      }
+      .kpi-card.amber::before {
+        background: linear-gradient(90deg, var(--amber), var(--orange));
+      }
+      .kpi-card.purple::before {
+        background: linear-gradient(90deg, var(--purple), var(--blue));
+      }
+      .kpi-card.cyan::before {
+        background: linear-gradient(90deg, var(--cyan), var(--green));
+      }
+
+      .kpi-card.green {
+        box-shadow: 0 0 24px rgba(34, 211, 165, 0.06);
+      }
+      .kpi-card.red {
+        box-shadow: 0 0 24px rgba(248, 113, 113, 0.06);
+      }
+      .kpi-card.blue {
+        box-shadow: 0 0 24px rgba(96, 165, 250, 0.06);
+      }
+
+      .kpi-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .kpi-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+      }
+      .kpi-card.green .kpi-icon {
+        background: rgba(34, 211, 165, 0.12);
+      }
+      .kpi-card.red .kpi-icon {
+        background: rgba(248, 113, 113, 0.12);
+      }
+      .kpi-card.blue .kpi-icon {
+        background: rgba(96, 165, 250, 0.12);
+      }
+      .kpi-card.amber .kpi-icon {
+        background: rgba(251, 191, 36, 0.12);
+      }
+      .kpi-card.purple .kpi-icon {
+        background: rgba(167, 139, 250, 0.12);
+      }
+      .kpi-card.cyan .kpi-icon {
+        background: rgba(56, 189, 248, 0.12);
+      }
+
+      .kpi-label {
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .kpi-value {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 4px 0 6px;
+        letter-spacing: -0.5px;
+      }
+      .kpi-card.green .kpi-value {
+        color: var(--green);
+      }
+      .kpi-card.red .kpi-value {
+        color: var(--red);
+      }
+      .kpi-card.blue .kpi-value {
+        color: var(--blue);
+      }
+      .kpi-card.amber .kpi-value {
+        color: var(--amber);
+      }
+      .kpi-card.purple .kpi-value {
+        color: var(--purple);
+      }
+      .kpi-card.cyan .kpi-value {
+        color: var(--cyan);
+      }
+
+      .kpi-insight {
+        font-size: 11px;
+        color: var(--muted2);
+      }
+      .kpi-badge {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+      .badge-pos {
+        background: rgba(34, 211, 165, 0.15);
+        color: var(--green);
+      }
+      .badge-neg {
+        background: rgba(248, 113, 113, 0.15);
+        color: var(--red);
+      }
+      .badge-neu {
+        background: rgba(96, 165, 250, 0.15);
+        color: var(--blue);
+      }
+
+      /* CHART GRID */
+      .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .chart-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r16);
+        padding: 22px;
+      }
+      .chart-card.col-12 {
+        grid-column: span 12;
+      }
+      .chart-card.col-8 {
+        grid-column: span 8;
+      }
+      .chart-card.col-6 {
+        grid-column: span 6;
+      }
+      .chart-card.col-4 {
+        grid-column: span 4;
+      }
+      .chart-card.col-5 {
+        grid-column: span 5;
+      }
+      .chart-card.col-7 {
+        grid-column: span 7;
+      }
+
+      @media (max-width: 1100px) {
+        .chart-card.col-8,
+        .chart-card.col-7 {
+          grid-column: span 12;
+        }
+        .chart-card.col-4,
+        .chart-card.col-5 {
+          grid-column: span 12;
+        }
+        .chart-card.col-6 {
+          grid-column: span 12;
+        }
+      }
+      @media (max-width: 700px) {
+        .main {
+          padding: 20px 16px 40px;
+        }
+        .header {
+          padding: 20px 16px;
+        }
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .chart-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .chart-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
+      .chart-wrap {
+        position: relative;
+      }
+
+      /* INSIGHTS */
+      .insights-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 14px;
+        margin-bottom: 32px;
+      }
+      .insight-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r16);
+        padding: 18px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .insight-icon {
+        font-size: 22px;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .insight-icon.warn {
+        background: rgba(251, 191, 36, 0.12);
+      }
+      .insight-icon.ok {
+        background: rgba(34, 211, 165, 0.12);
+      }
+      .insight-icon.bad {
+        background: rgba(248, 113, 113, 0.12);
+      }
+      .insight-icon.info {
+        background: rgba(96, 165, 250, 0.12);
+      }
+      .insight-icon.tip {
+        background: rgba(167, 139, 250, 0.12);
+      }
+
+      .insight-content h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .insight-content p {
+        font-size: 12px;
+        color: var(--muted2);
+        line-height: 1.5;
+      }
+      .insight-content strong {
+        color: var(--amber);
+      }
+
+      /* ALERT */
+      .alert-banner {
+        background: rgba(248, 113, 113, 0.08);
+        border: 1px solid rgba(248, 113, 113, 0.25);
+        border-radius: var(--r12);
+        padding: 14px 18px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 28px;
+      }
+      .alert-banner .icon {
+        font-size: 20px;
+      }
+      .alert-banner p {
+        font-size: 13px;
+        color: var(--red);
+      }
+      .alert-banner strong {
+        color: var(--text);
+      }
+
+      /* TABLE */
+      .table-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r16);
+        overflow: hidden;
+        margin-bottom: 32px;
+      }
+      .table-header {
+        padding: 20px 24px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .table-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .search-input {
+        background: var(--bg2);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-size: 12px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        width: 200px;
+        transition: border-color 0.2s;
+      }
+      .search-input:focus {
+        border-color: var(--blue);
+      }
+      .search-input::placeholder {
+        color: var(--muted);
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th {
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        color: var(--muted);
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+        transition: color 0.2s;
+      }
+      .data-table th:hover {
+        color: var(--text);
+      }
+      .data-table td {
+        padding: 13px 16px;
+        font-size: 13px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        white-space: nowrap;
+      }
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr {
+        transition: background 0.15s;
+      }
+      .data-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .data-table tbody tr.neg-row {
+        background: rgba(248, 113, 113, 0.04);
+      }
+      .data-table tbody tr.neg-row:hover {
+        background: rgba(248, 113, 113, 0.08);
+      }
+
+      .status-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 10px;
+        display: inline-block;
+      }
+      .status-pos {
+        background: rgba(34, 211, 165, 0.12);
+        color: var(--green);
+      }
+      .status-neg {
+        background: rgba(248, 113, 113, 0.12);
+        color: var(--red);
+      }
+
+      .val-pos {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .val-neg {
+        color: var(--red);
+        font-weight: 600;
+      }
+      .val-neutral {
+        color: var(--blue);
+        font-weight: 600;
+      }
+      .val-muted {
+        color: var(--muted2);
+      }
+
+      /* FOOTER */
+      .footer {
+        text-align: center;
+        padding: 20px 40px;
+        border-top: 1px solid var(--border);
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* SCROLLBAR */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg2);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2d2d40;
+        border-radius: 3px;
+      }
+
+      /* ANIMATIONS */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .kpi-card {
+        animation: fadeUp 0.4s ease both;
+      }
+      .chart-card {
+        animation: fadeUp 0.5s ease both;
+      }
+      .kpi-card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .kpi-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .kpi-card:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .kpi-card:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .kpi-card:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .kpi-card:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .kpi-card:nth-child(7) {
+        animation-delay: 0.35s;
+      }
+      .kpi-card:nth-child(8) {
+        animation-delay: 0.4s;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      /* RECURRENCE BAR */
+      .rec-bar-bg {
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 4px;
+        height: 6px;
+        margin-top: 6px;
+      }
+      .rec-bar-fill {
+        height: 6px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, var(--blue), var(--cyan));
+      }
+
+      /* DONUT CENTER */
+      .donut-center {
+        position: relative;
+      }
+      .donut-center canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-inner">
+        <div class="header-logo">
+          <div class="logo-icon">📊</div>
+          <div>
+            <h1>Dashboard Financeiro <span>DPR</span></h1>
+            <div class="header-sub">
+              Análise de Fluxo de Caixa — Janeiro a Junho 2025
+            </div>
+          </div>
+        </div>
+        <div class="header-meta">
+          <span class="header-badge">6 meses analisados</span>
+          <span class="header-badge">28 lançamentos</span>
+          <span class="header-date" id="gen-date"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <!-- ALERT BANNER -->
+      <div class="alert-banner">
+        <span class="icon">⚠️</span>
+        <p>
+          <strong>Alerta Financeiro:</strong> As saídas totais
+          (R$&nbsp;12.950,00) superam as entradas (R$&nbsp;8.500,00) no período.
+          O saldo acumulado é <strong>negativo em R$&nbsp;2.450,00</strong>.
+          Atenção ao controle de caixa.
+        </p>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filters">
+        <span class="filter-label">Período</span>
+        <div class="filter-group" id="filter-period">
+          <button class="filter-btn active" data-period="all">Tudo</button>
+          <button class="filter-btn" data-period="q1">1º Trimestre</button>
+          <button class="filter-btn" data-period="q2">2º Trimestre</button>
+        </div>
+        <div class="filter-sep"></div>
+        <span class="filter-label">Tipo</span>
+        <div class="filter-group" id="filter-type">
+          <button class="filter-btn active" data-type="all">Todos</button>
+          <button class="filter-btn" data-type="Projeto">Projeto</button>
+          <button class="filter-btn" data-type="Livre">Livre</button>
+          <button class="filter-btn" data-type="Fixo">Fixo</button>
+        </div>
+        <div class="filter-sep"></div>
+        <span class="filter-label">Visualização</span>
+        <div class="filter-group">
+          <button class="filter-btn active" id="toggle-view" data-mode="abs">
+            Valores (R$)
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="section-title">Indicadores principais</div>
+      <div class="kpi-grid">
+        <div class="kpi-card red">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Saldo Líquido Total</div>
+              <div class="kpi-value">−R$&nbsp;2.450</div>
+            </div>
+            <div class="kpi-icon">💰</div>
+          </div>
+          <div class="kpi-insight">
+            Caixa inicial: R$&nbsp;2.000 → Saldo final: −R$&nbsp;450
+          </div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Total de Entradas</div>
+              <div class="kpi-value">R$&nbsp;8.500</div>
+            </div>
+            <div class="kpi-icon">⬆️</div>
+          </div>
+          <div class="kpi-insight">
+            100% originadas de projetos
+            <span class="kpi-badge badge-pos">Empresas X e Y</span>
+          </div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Total de Saídas</div>
+              <div class="kpi-value">R$&nbsp;12.950</div>
+            </div>
+            <div class="kpi-icon">⬇️</div>
+          </div>
+          <div class="kpi-insight">
+            Saídas superam entradas em
+            <span class="kpi-badge badge-neg">52,4%</span>
+          </div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Resultado Médio Mensal</div>
+              <div class="kpi-value">−R$&nbsp;741</div>
+            </div>
+            <div class="kpi-icon">📈</div>
+          </div>
+          <div class="kpi-insight">Média de resultado por mês no período</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Maior Despesa Individual</div>
+              <div class="kpi-value">R$&nbsp;1.200</div>
+            </div>
+            <div class="kpi-icon">🔻</div>
+          </div>
+          <div class="kpi-insight">Transporte e hospedagem em evento (Fev)</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Melhor Mês</div>
+              <div class="kpi-value">Março</div>
+            </div>
+            <div class="kpi-icon">🏆</div>
+          </div>
+          <div class="kpi-insight">
+            Resultado +R$&nbsp;1.150
+            <span class="kpi-badge badge-pos">+positivo</span>
+          </div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Pior Mês</div>
+              <div class="kpi-value">Fevereiro</div>
+            </div>
+            <div class="kpi-icon">📉</div>
+          </div>
+          <div class="kpi-insight">
+            Resultado −R$&nbsp;2.200 (evento externo)
+          </div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-top">
+            <div>
+              <div class="kpi-label">Entradas vs Saídas</div>
+              <div class="kpi-value">39,6%</div>
+            </div>
+            <div class="kpi-icon">⚖️</div>
+          </div>
+          <div class="kpi-insight">
+            Razão de cobertura das entradas sobre saídas
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 1 -->
+      <div class="section-title">Evolução e comparativo mensal</div>
+      <div class="charts-grid">
+        <!-- ÁREA: Entradas/Saídas/Saldo -->
+        <div class="chart-card col-8">
+          <div class="chart-title">
+            Evolução Mensal — Entradas, Saídas e Resultado
+          </div>
+          <div class="chart-sub">Área combinada com linha de resultado</div>
+          <div class="chart-wrap" style="height: 280px">
+            <canvas id="chartArea"></canvas>
+          </div>
+        </div>
+
+        <!-- DONUT: Tipo -->
+        <div class="chart-card col-4">
+          <div class="chart-title">Distribuição por Tipo</div>
+          <div class="chart-sub">Projeto · Livre · Fixo (volume de gastos)</div>
+          <div class="chart-wrap" style="height: 280px">
+            <canvas id="chartTipo"></canvas>
+          </div>
+        </div>
+
+        <!-- BARRAS AGRUPADAS -->
+        <div class="chart-card col-6">
+          <div class="chart-title">Comparativo Mensal — Entradas × Saídas</div>
+          <div class="chart-sub">Barras agrupadas por mês</div>
+          <div class="chart-wrap" style="height: 260px">
+            <canvas id="chartBars"></canvas>
+          </div>
+        </div>
+
+        <!-- RESULTADO MÊS -->
+        <div class="chart-card col-6">
+          <div class="chart-title">Resultado Líquido por Mês</div>
+          <div class="chart-sub">Verde = positivo · Vermelho = negativo</div>
+          <div class="chart-wrap" style="height: 260px">
+            <canvas id="chartResultado"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW 2 -->
+      <div class="section-title">Despesas e receitas</div>
+      <div class="charts-grid">
+        <!-- SALDO ACUMULADO LINE -->
+        <div class="chart-card col-7">
+          <div class="chart-title">Linha de Tendência — Saldo Acumulado</div>
+          <div class="chart-sub">
+            Evolução do caixa considerando saldo inicial de R$&nbsp;2.000
+          </div>
+          <div class="chart-wrap" style="height: 260px">
+            <canvas id="chartSaldo"></canvas>
+          </div>
+        </div>
+
+        <!-- DONUT: Categorias -->
+        <div class="chart-card col-5">
+          <div class="chart-title">Participação por Categoria</div>
+          <div class="chart-sub">% do total de gastos</div>
+          <div class="chart-wrap" style="height: 260px">
+            <canvas id="chartDonut"></canvas>
+          </div>
+        </div>
+
+        <!-- HORIZONTAL: Categorias -->
+        <div class="chart-card col-6">
+          <div class="chart-title">Despesas por Categoria</div>
+          <div class="chart-sub">Ordenadas da maior para menor</div>
+          <div class="chart-wrap" style="height: 300px">
+            <canvas id="chartCat"></canvas>
+          </div>
+        </div>
+
+        <!-- RECEITAS POR PROJETO -->
+        <div class="chart-card col-6">
+          <div class="chart-title">Receitas por Projeto</div>
+          <div class="chart-sub">Empresa X e Empresa Y</div>
+          <div class="chart-wrap" style="height: 300px">
+            <canvas id="chartProjetos"></canvas>
+          </div>
+        </div>
+
+        <!-- TOP 10 DESPESAS -->
+        <div class="chart-card col-12">
+          <div class="chart-title">Top 10 — Maiores Despesas Individuais</div>
+          <div class="chart-sub">Barras horizontais ordenadas por valor</div>
+          <div class="chart-wrap" style="height: 300px">
+            <canvas id="chartTop10"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSIGHTS -->
+      <div class="section-title">Insights automáticos</div>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <div class="insight-icon ok">🏆</div>
+          <div class="insight-content">
+            <h4>Mês com maior entrada</h4>
+            <p>
+              Março e Abril empataram com <strong>R$&nbsp;3.500</strong> em
+              entradas. Ambos receberam parcelas dos projetos Empresa X e
+              Empresa Y simultaneamente.
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon bad">📉</div>
+          <div class="insight-content">
+            <h4>Mês com maior saída</h4>
+            <p>
+              Fevereiro registrou <strong>R$&nbsp;3.700</strong> em saídas,
+              impulsionado pelo evento externo (transporte + hospedagem +
+              alimentação + execução com empresa jr).
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon warn">📦</div>
+          <div class="insight-content">
+            <h4>Categoria campeã de gastos</h4>
+            <p>
+              <strong>Material de consumo e equipamentos</strong> liderou com
+              R$&nbsp;1.800, seguido de Plataformas online (R$&nbsp;2.500) e
+              Ingressos para eventos (R$&nbsp;2.000).
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon bad">🔴</div>
+          <div class="insight-content">
+            <h4>Meses com saldo negativo</h4>
+            <p>
+              <strong>4 de 6 meses</strong> fecharam com resultado negativo no
+              período: Janeiro, Fevereiro, Maio e Junho. Apenas Março e Abril
+              foram positivos.
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon info">🏢</div>
+          <div class="insight-content">
+            <h4>Dependência de receita por projeto</h4>
+            <p>
+              <strong>100% das entradas</strong> vieram de projetos (Empresa X e
+              Empresa Y). Não há receita recorrente autônoma, criando risco de
+              descontinuidade financeira.
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon warn">🔒</div>
+          <div class="insight-content">
+            <h4>Peso dos gastos fixos</h4>
+            <p>
+              Os gastos fixos (pagamento de cartão, R$&nbsp;350/mês) representam
+              <strong>16,2%</strong> do total de saídas — relativamente baixo,
+              mas obrigatório em todos os meses.
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon ok">🔄</div>
+          <div class="insight-content">
+            <h4>Despesas recorrentes</h4>
+            <p>
+              <strong>Plataforma de capacitação</strong> (R$&nbsp;500) aparece
+              em 5 dos 6 meses.
+              <strong>Pagamento de cartão</strong> (R$&nbsp;350) é presente em
+              todos os 6 meses.
+            </p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon tip">💡</div>
+          <div class="insight-content">
+            <h4>Sugestão de controle</h4>
+            <p>
+              Priorize <strong>captar novos projetos</strong> para os meses sem
+              receita (Maio e Junho ficaram no vermelho). Considere criar uma
+              <strong>reserva de caixa</strong> nos meses positivos.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECORRÊNCIA -->
+      <div class="section-title">Análise de recorrência de despesas</div>
+      <div class="chart-card col-12" style="margin-bottom: 32px; padding: 22px">
+        <div class="chart-title">Categorias × Meses de ocorrência</div>
+        <div class="chart-sub">
+          Quantos meses cada categoria aparece no período
+        </div>
+        <div
+          id="recurrenceList"
+          style="
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          "
+        ></div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="section-title">Tabela mensal detalhada</div>
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Resumo por Mês</h3>
+          <input
+            class="search-input"
+            type="text"
+            id="tableSearch"
+            placeholder="Buscar mês ou categoria…"
+          />
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="mainTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable(0)">Mês ↕</th>
+                <th onclick="sortTable(1)">Entradas ↕</th>
+                <th onclick="sortTable(2)">Saídas ↕</th>
+                <th onclick="sortTable(3)">Saldo do Mês ↕</th>
+                <th onclick="sortTable(4)">Saldo Acum. ↕</th>
+                <th onclick="sortTable(5)">Lançamentos ↕</th>
+                <th>Maior Despesa</th>
+                <th>Principal Categoria</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      Dados extraídos da planilha <strong>semana 3 DPR.xlsx</strong> — Dashboard
+      gerado automaticamente · <span id="footer-date"></span>
+    </div>
+
+    <script>
+      // ══════════════════════════════════════════════════════════════════
+      //  DATA
+      // ══════════════════════════════════════════════════════════════════
+      const TRANSACTIONS = [
+        {
+          mes: "Janeiro",
+          valor: 1500,
+          desc: "1/3 parcela projeto empresa X",
+          projeto: "Empresa X",
+          cat: "",
+          tipo: "Projeto",
+        },
+        {
+          mes: "Janeiro",
+          valor: -600,
+          desc: "1/3 parcela encomenda de camisas",
+          projeto: "",
+          cat: "Material de consumo e equipamentos",
+          tipo: "Livre",
+        },
+        {
+          mes: "Janeiro",
+          valor: -350,
+          desc: "Pagamento de cartão",
+          projeto: "",
+          cat: "Pagamento de impostos e taxas bancárias",
+          tipo: "Fixo",
+        },
+        {
+          mes: "Fevereiro",
+          valor: -500,
+          desc: "Nova plataforma de capacitação",
+          projeto: "",
+          cat: "Plataformas online de cursos em tecnologia",
+          tipo: "Livre",
+        },
+        {
+          mes: "Fevereiro",
+          valor: -1200,
+          desc: "Transporte e hospedagem em evento",
+          projeto: "",
+          cat: "Hospedagem",
+          tipo: "Livre",
+        },
+        {
+          mes: "Fevereiro",
+          valor: -350,
+          desc: "Alimentação no evento",
+          projeto: "",
+          cat: "Alimentação",
+          tipo: "Livre",
+        },
+        {
+          mes: "Fevereiro",
+          valor: -700,
+          desc: "Execução com outra empresa jr",
+          projeto: "",
+          cat: "Transporte",
+          tipo: "Livre",
+        },
+        {
+          mes: "Fevereiro",
+          valor: 1500,
+          desc: "2/3 parcela projeto empresa X",
+          projeto: "Empresa X",
+          cat: "",
+          tipo: "Projeto",
+        },
+        {
+          mes: "Fevereiro",
+          valor: -600,
+          desc: "2/3 parcela encomenda de camisas",
+          projeto: "",
+          cat: "Material de consumo e equipamentos",
+          tipo: "Livre",
+        },
+        {
+          mes: "Fevereiro",
+          valor: -350,
+          desc: "Pagamento de cartão",
+          projeto: "",
+          cat: "Pagamento de impostos e taxas bancárias",
+          tipo: "Fixo",
+        },
+        {
+          mes: "Março",
+          valor: 2000,
+          desc: "1/2 parcela projeto empresa Y",
+          projeto: "Empresa Y",
+          cat: "",
+          tipo: "Projeto",
+        },
+        {
+          mes: "Março",
+          valor: -500,
+          desc: "Nova plataforma de capacitação",
+          projeto: "",
+          cat: "Plataformas online de cursos em tecnologia",
+          tipo: "Livre",
+        },
+        {
+          mes: "Março",
+          valor: -900,
+          desc: "Ferramenta da diretoria",
+          projeto: "",
+          cat: "Material de divulgação e marketing",
+          tipo: "Livre",
+        },
+        {
+          mes: "Março",
+          valor: 1500,
+          desc: "3/3 parcela projeto empresa X",
+          projeto: "Empresa X",
+          cat: "",
+          tipo: "Projeto",
+        },
+        {
+          mes: "Março",
+          valor: -600,
+          desc: "3/3 parcela encomenda de camisas",
+          projeto: "",
+          cat: "Material de consumo e equipamentos",
+          tipo: "Livre",
+        },
+        {
+          mes: "Março",
+          valor: -350,
+          desc: "Pagamento de cartão",
+          projeto: "",
+          cat: "Pagamento de impostos e taxas bancárias",
+          tipo: "Fixo",
+        },
+        {
+          mes: "Abril",
+          valor: 2000,
+          desc: "2/2 parcela projeto empresa Y",
+          projeto: "Empresa Y",
+          cat: "",
+          tipo: "Projeto",
+        },
+        {
+          mes: "Abril",
+          valor: -500,
+          desc: "Nova plataforma de capacitação",
+          projeto: "",
+          cat: "Plataformas online de cursos em tecnologia",
+          tipo: "Livre",
+        },
+        {
+          mes: "Abril",
+          valor: -450,
+          desc: "Materiais para processo seletivo interno",
+          projeto: "",
+          cat: "Material de divulgação e marketing",
+          tipo: "Livre",
+        },
+        {
+          mes: "Abril",
+          valor: -300,
+          desc: "Coffee break",
+          projeto: "",
+          cat: "Alimentação",
+          tipo: "Livre",
+        },
+        {
+          mes: "Abril",
+          valor: -650,
+          desc: "Manutenção equipamentos internos",
+          projeto: "",
+          cat: "Material de escritório",
+          tipo: "Livre",
+        },
+        {
+          mes: "Abril",
+          valor: -350,
+          desc: "Pagamento de cartão",
+          projeto: "",
+          cat: "Pagamento de impostos e taxas bancárias",
+          tipo: "Fixo",
+        },
+        {
+          mes: "Maio",
+          valor: -500,
+          desc: "Nova plataforma de capacitação",
+          projeto: "",
+          cat: "Plataformas online de cursos em tecnologia",
+          tipo: "Livre",
+        },
+        {
+          mes: "Maio",
+          valor: -1000,
+          desc: "1/2 parcela ingressos RR",
+          projeto: "",
+          cat: "Aquisição de ingressos para participação de eventos",
+          tipo: "Livre",
+        },
+        {
+          mes: "Maio",
+          valor: -350,
+          desc: "Pagamento de cartão",
+          projeto: "",
+          cat: "Pagamento de impostos e taxas bancárias",
+          tipo: "Fixo",
+        },
+        {
+          mes: "Junho",
+          valor: -500,
+          desc: "Nova plataforma de capacitação",
+          projeto: "",
+          cat: "Plataformas online de cursos em tecnologia",
+          tipo: "Livre",
+        },
+        {
+          mes: "Junho",
+          valor: -1000,
+          desc: "2/2 parcela ingressos RR",
+          projeto: "",
+          cat: "Aquisição de ingressos para participação de eventos",
+          tipo: "Livre",
+        },
+        {
+          mes: "Junho",
+          valor: -350,
+          desc: "Pagamento de cartão",
+          projeto: "",
+          cat: "Pagamento de impostos e taxas bancárias",
+          tipo: "Fixo",
+        },
+      ];
+
+      const MONTHS = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+      ];
+      const ABBR = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
+      const Q1 = ["Janeiro", "Fevereiro", "Março"];
+      const Q2 = ["Abril", "Maio", "Junho"];
+
+      // ── State ─────────────────────────────────────────────────────────
+      let activePeriod = "all";
+      let activeType = "all";
+      let viewMode = "abs"; // abs | pct
+
+      // ── Format helpers ────────────────────────────────────────────────
+      function fmt(v) {
+        return (
+          "R$\u00a0" +
+          Math.abs(v).toLocaleString("pt-BR", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })
+        );
+      }
+      function fmtSigned(v) {
+        const s = v >= 0 ? "" : "−";
+        return (
+          s +
+          "R$\u00a0" +
+          Math.abs(v).toLocaleString("pt-BR", { minimumFractionDigits: 0 })
+        );
+      }
+      function fmtPct(v) {
+        return (
+          v.toLocaleString("pt-BR", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          }) + "%"
+        );
+      }
+
+      // ── Compute monthly summary ───────────────────────────────────────
+      function computeSummary(txs) {
+        const months = [...new Set(txs.map((t) => t.mes))];
+        // preserve order
+        const ordered = MONTHS.filter((m) => months.includes(m));
+        let saldo = 2000;
+        return ordered.map((m) => {
+          const mt = txs.filter((t) => t.mes === m);
+          const ent = mt
+            .filter((t) => t.valor > 0)
+            .reduce((a, t) => a + t.valor, 0);
+          const sai = mt
+            .filter((t) => t.valor < 0)
+            .reduce((a, t) => a + Math.abs(t.valor), 0);
+          const res = ent - sai;
+          saldo += res;
+          const despesas = mt.filter((t) => t.valor < 0);
+          const maiorDesp = despesas.length
+            ? Math.max(...despesas.map((t) => Math.abs(t.valor)))
+            : 0;
+          const maiorDespDesc = despesas.length
+            ? despesas.find((t) => Math.abs(t.valor) === maiorDesp)?.desc
+            : "—";
+          const cats = {};
+          despesas.forEach((t) => {
+            cats[t.cat] = (cats[t.cat] || 0) + Math.abs(t.valor);
+          });
+          const princCat =
+            Object.entries(cats).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+          return {
+            mes: m,
+            ent,
+            sai,
+            res,
+            saldo,
+            count: mt.length,
+            maiorDesp,
+            maiorDespDesc,
+            princCat,
+          };
+        });
+      }
+
+      // ── Filter transactions ───────────────────────────────────────────
+      function getFiltered() {
+        return TRANSACTIONS.filter((t) => {
+          if (activePeriod === "q1" && !Q1.includes(t.mes)) return false;
+          if (activePeriod === "q2" && !Q2.includes(t.mes)) return false;
+          if (activeType !== "all" && t.tipo !== activeType) return false;
+          return true;
+        });
+      }
+
+      // ── Chart defaults ────────────────────────────────────────────────
+      Chart.defaults.color = "#64748b";
+      Chart.defaults.font.family = "Inter";
+      Chart.defaults.font.size = 11;
+
+      const PALETTE = {
+        green: "#22d3a5",
+        red: "#f87171",
+        blue: "#60a5fa",
+        amber: "#fbbf24",
+        purple: "#a78bfa",
+        cyan: "#38bdf8",
+        orange: "#fb923c",
+        pink: "#f472b6",
+      };
+      const COLORS = Object.values(PALETTE);
+
+      function gridOpts() {
+        return { color: "rgba(255,255,255,0.05)", drawBorder: false };
+      }
+      function tickOpts() {
+        return { color: "#64748b" };
+      }
+
+      let charts = {};
+
+      function destroyAll() {
+        Object.values(charts).forEach((c) => c.destroy());
+        charts = {};
+      }
+
+      // ══════════════════════════════════════════════════════════════════
+      //  DRAW ALL CHARTS
+      // ══════════════════════════════════════════════════════════════════
+      function drawCharts() {
+        destroyAll();
+        const txs = getFiltered();
+        const summary = computeSummary(txs);
+        const labels = summary.map((s) => s.mes.substring(0, 3));
+
+        // ── 1. AREA: Entradas / Saídas / Resultado ────────────────────
+        {
+          const entData = summary.map((s) => s.ent);
+          const saiData = summary.map((s) => s.sai);
+          const resData = summary.map((s) => s.res);
+
+          charts.area = new Chart(document.getElementById("chartArea"), {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  type: "bar",
+                  label: "Entradas",
+                  data: entData,
+                  backgroundColor: "rgba(34,211,165,0.25)",
+                  borderColor: PALETTE.green,
+                  borderWidth: 1.5,
+                  borderRadius: 6,
+                  order: 2,
+                },
+                {
+                  type: "bar",
+                  label: "Saídas",
+                  data: saiData,
+                  backgroundColor: "rgba(248,113,113,0.25)",
+                  borderColor: PALETTE.red,
+                  borderWidth: 1.5,
+                  borderRadius: 6,
+                  order: 2,
+                },
+                {
+                  type: "line",
+                  label: "Resultado",
+                  data: resData,
+                  borderColor: PALETTE.amber,
+                  backgroundColor: "rgba(251,191,36,0.08)",
+                  borderWidth: 2.5,
+                  pointRadius: 5,
+                  pointBackgroundColor: resData.map((v) =>
+                    v >= 0 ? PALETTE.green : PALETTE.red,
+                  ),
+                  pointBorderColor: "#0a0a0f",
+                  pointBorderWidth: 2,
+                  tension: 0.4,
+                  fill: false,
+                  order: 1,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  labels: { color: "#94a3b8", boxWidth: 12, padding: 16 },
+                },
+                tooltip: { mode: "index" },
+              },
+              scales: {
+                x: { grid: gridOpts(), ticks: tickOpts() },
+                y: {
+                  grid: gridOpts(),
+                  ticks: {
+                    ...tickOpts(),
+                    callback: (v) => "R$ " + (v / 1000).toFixed(0) + "k",
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 2. DONUT: Tipo ────────────────────────────────────────────
+        {
+          const tipos = { Livre: 0, Fixo: 0, Projeto: 0 };
+          txs
+            .filter((t) => t.valor < 0)
+            .forEach((t) => {
+              tipos[t.tipo] = (tipos[t.tipo] || 0) + Math.abs(t.valor);
+            });
+          charts.tipo = new Chart(document.getElementById("chartTipo"), {
+            type: "doughnut",
+            data: {
+              labels: Object.keys(tipos),
+              datasets: [
+                {
+                  data: Object.values(tipos),
+                  backgroundColor: [PALETTE.blue, PALETTE.amber, PALETTE.green],
+                  borderColor: "#12121a",
+                  borderWidth: 3,
+                  hoverOffset: 8,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "68%",
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: { color: "#94a3b8", padding: 14, boxWidth: 10 },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) => {
+                      const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                      return ` ${ctx.label}: ${fmt(ctx.parsed)} (${fmtPct((ctx.parsed / total) * 100)})`;
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 3. BARRAS AGRUPADAS ───────────────────────────────────────
+        {
+          charts.bars = new Chart(document.getElementById("chartBars"), {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Entradas",
+                  data: summary.map((s) => s.ent),
+                  backgroundColor: "rgba(34,211,165,0.7)",
+                  borderColor: PALETTE.green,
+                  borderWidth: 1,
+                  borderRadius: 5,
+                },
+                {
+                  label: "Saídas",
+                  data: summary.map((s) => s.sai),
+                  backgroundColor: "rgba(248,113,113,0.7)",
+                  borderColor: PALETTE.red,
+                  borderWidth: 1,
+                  borderRadius: 5,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { labels: { color: "#94a3b8", boxWidth: 10 } },
+              },
+              scales: {
+                x: { grid: gridOpts(), ticks: tickOpts() },
+                y: {
+                  grid: gridOpts(),
+                  ticks: {
+                    ...tickOpts(),
+                    callback: (v) => "R$" + (v / 1000).toFixed(0) + "k",
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 4. RESULTADO POR MÊS ─────────────────────────────────────
+        {
+          const resData = summary.map((s) => s.res);
+          charts.resultado = new Chart(
+            document.getElementById("chartResultado"),
+            {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "Resultado",
+                    data: resData,
+                    backgroundColor: resData.map((v) =>
+                      v >= 0 ? "rgba(34,211,165,0.7)" : "rgba(248,113,113,0.7)",
+                    ),
+                    borderColor: resData.map((v) =>
+                      v >= 0 ? PALETTE.green : PALETTE.red,
+                    ),
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (ctx) => " " + fmtSigned(ctx.parsed.y),
+                    },
+                  },
+                },
+                scales: {
+                  x: { grid: gridOpts(), ticks: tickOpts() },
+                  y: {
+                    grid: gridOpts(),
+                    ticks: {
+                      ...tickOpts(),
+                      callback: (v) =>
+                        (v >= 0 ? "" : "-") +
+                        "R$" +
+                        (Math.abs(v) / 1000).toFixed(0) +
+                        "k",
+                    },
+                  },
+                },
+              },
+            },
+          );
+        }
+
+        // ── 5. SALDO ACUMULADO ────────────────────────────────────────
+        {
+          const saldoData = summary.map((s) => s.saldo);
+          const pointColors = saldoData.map((v) =>
+            v >= 0 ? PALETTE.green : PALETTE.red,
+          );
+          charts.saldo = new Chart(document.getElementById("chartSaldo"), {
+            type: "line",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Saldo Acumulado",
+                  data: saldoData,
+                  borderColor: PALETTE.cyan,
+                  backgroundColor: "rgba(56,189,248,0.08)",
+                  borderWidth: 2.5,
+                  pointRadius: 6,
+                  pointHoverRadius: 8,
+                  pointBackgroundColor: pointColors,
+                  pointBorderColor: "#0a0a0f",
+                  pointBorderWidth: 2,
+                  tension: 0.4,
+                  fill: true,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) => " Saldo: " + fmtSigned(ctx.parsed.y),
+                  },
+                },
+              },
+              scales: {
+                x: { grid: gridOpts(), ticks: tickOpts() },
+                y: {
+                  grid: gridOpts(),
+                  ticks: {
+                    ...tickOpts(),
+                    callback: (v) =>
+                      (v >= 0 ? "" : "-") +
+                      "R$" +
+                      (Math.abs(v) / 1000).toFixed(1) +
+                      "k",
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 6. DONUT CATEGORIAS ───────────────────────────────────────
+        {
+          const cats = {};
+          txs
+            .filter((t) => t.valor < 0 && t.cat)
+            .forEach((t) => {
+              cats[t.cat] = (cats[t.cat] || 0) + Math.abs(t.valor);
+            });
+          const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+          const total = sorted.reduce((a, e) => a + e[1], 0);
+          const shortLabels = sorted.map(([k]) =>
+            k.length > 22 ? k.substring(0, 20) + "…" : k,
+          );
+
+          charts.donut = new Chart(document.getElementById("chartDonut"), {
+            type: "doughnut",
+            data: {
+              labels: shortLabels,
+              datasets: [
+                {
+                  data: sorted.map((e) => e[1]),
+                  backgroundColor: COLORS.slice(0, sorted.length),
+                  borderColor: "#12121a",
+                  borderWidth: 3,
+                  hoverOffset: 10,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "60%",
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    color: "#94a3b8",
+                    padding: 8,
+                    boxWidth: 8,
+                    font: { size: 10 },
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) =>
+                      ` ${ctx.parsed > 0 ? fmtPct((ctx.parsed / total) * 100) : ""} — ${fmt(ctx.parsed)}`,
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 7. HORIZONTAL: CATEGORIAS ────────────────────────────────
+        {
+          const cats = {};
+          txs
+            .filter((t) => t.valor < 0 && t.cat)
+            .forEach((t) => {
+              cats[t.cat] = (cats[t.cat] || 0) + Math.abs(t.valor);
+            });
+          const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+          const shortL = sorted.map(([k]) =>
+            k.length > 30 ? k.substring(0, 28) + "…" : k,
+          );
+
+          charts.cat = new Chart(document.getElementById("chartCat"), {
+            type: "bar",
+            data: {
+              labels: shortL,
+              datasets: [
+                {
+                  data: sorted.map((e) => e[1]),
+                  backgroundColor: COLORS.slice(0, sorted.length).map(
+                    (c) => c + "cc",
+                  ),
+                  borderColor: COLORS.slice(0, sorted.length),
+                  borderWidth: 1.5,
+                  borderRadius: 5,
+                },
+              ],
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: { label: (ctx) => " " + fmt(ctx.parsed.x) },
+                },
+              },
+              scales: {
+                x: {
+                  grid: gridOpts(),
+                  ticks: {
+                    ...tickOpts(),
+                    callback: (v) => "R$" + (v / 1000).toFixed(0) + "k",
+                  },
+                },
+                y: {
+                  grid: { display: false },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 8. RECEITAS POR PROJETO ───────────────────────────────────
+        {
+          const projs = {};
+          txs
+            .filter((t) => t.valor > 0 && t.projeto)
+            .forEach((t) => {
+              projs[t.projeto] = (projs[t.projeto] || 0) + t.valor;
+            });
+          const sorted = Object.entries(projs).sort((a, b) => b[1] - a[1]);
+
+          charts.proj = new Chart(document.getElementById("chartProjetos"), {
+            type: "bar",
+            data: {
+              labels: sorted.map((e) => e[0]),
+              datasets: [
+                {
+                  label: "Receita total",
+                  data: sorted.map((e) => e[1]),
+                  backgroundColor: [
+                    PALETTE.green + "cc",
+                    PALETTE.blue + "cc",
+                    PALETTE.purple + "cc",
+                  ],
+                  borderColor: [PALETTE.green, PALETTE.blue, PALETTE.purple],
+                  borderWidth: 1.5,
+                  borderRadius: 8,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: { label: (ctx) => " " + fmt(ctx.parsed.y) },
+                },
+              },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: "#94a3b8" } },
+                y: {
+                  grid: gridOpts(),
+                  ticks: {
+                    ...tickOpts(),
+                    callback: (v) => "R$" + (v / 1000).toFixed(0) + "k",
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // ── 9. TOP 10 DESPESAS ────────────────────────────────────────
+        {
+          const despesas = txs
+            .filter((t) => t.valor < 0)
+            .map((t) => ({ desc: t.desc, val: Math.abs(t.valor), mes: t.mes }))
+            .sort((a, b) => b.val - a.val)
+            .slice(0, 10);
+
+          charts.top10 = new Chart(document.getElementById("chartTop10"), {
+            type: "bar",
+            data: {
+              labels: despesas.map((d) =>
+                d.desc.length > 40 ? d.desc.substring(0, 38) + "…" : d.desc,
+              ),
+              datasets: [
+                {
+                  data: despesas.map((d) => d.val),
+                  backgroundColor: despesas.map(
+                    (_, i) => COLORS[i % COLORS.length] + "99",
+                  ),
+                  borderColor: despesas.map(
+                    (_, i) => COLORS[i % COLORS.length],
+                  ),
+                  borderWidth: 1.5,
+                  borderRadius: 5,
+                },
+              ],
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) =>
+                      ` ${fmt(ctx.parsed.x)} — ${despesas[ctx.dataIndex].mes}`,
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  grid: gridOpts(),
+                  ticks: {
+                    ...tickOpts(),
+                    callback: (v) => "R$" + (v / 1000).toFixed(1) + "k",
+                  },
+                },
+                y: {
+                  grid: { display: false },
+                  ticks: { color: "#94a3b8", font: { size: 10 } },
+                },
+              },
+            },
+          });
+        }
+      }
+
+      // ══════════════════════════════════════════════════════════════════
+      //  TABLE
+      // ══════════════════════════════════════════════════════════════════
+      function renderTable(query = "") {
+        const txs = getFiltered();
+        const summary = computeSummary(txs);
+        const tbody = document.getElementById("tableBody");
+        const q = query.toLowerCase();
+        tbody.innerHTML = "";
+        summary.forEach((s) => {
+          if (
+            q &&
+            !s.mes.toLowerCase().includes(q) &&
+            !s.princCat.toLowerCase().includes(q)
+          )
+            return;
+          const isNeg = s.res < 0;
+          const tr = document.createElement("tr");
+          if (isNeg) tr.classList.add("neg-row");
+          tr.innerHTML = `
+      <td><strong style="color:#e2e8f0">${s.mes}</strong></td>
+      <td class="val-pos">${fmt(s.ent)}</td>
+      <td class="val-neg">${fmt(s.sai)}</td>
+      <td class="${s.res >= 0 ? "val-pos" : "val-neg"}">${fmtSigned(s.res)}</td>
+      <td class="${s.saldo >= 0 ? "val-neutral" : "val-neg"}">${fmtSigned(s.saldo)}</td>
+      <td class="val-muted">${s.count}</td>
+      <td style="max-width:160px;white-space:normal;font-size:11px;color:#94a3b8">${s.maiorDespDesc} <span style="color:#f87171">(${fmt(s.maiorDesp)})</span></td>
+      <td style="font-size:11px;color:#94a3b8;max-width:140px;white-space:normal">${s.princCat}</td>
+      <td><span class="status-badge ${s.res >= 0 ? "status-pos" : "status-neg"}">${s.res >= 0 ? "✓ Positivo" : "✗ Negativo"}</span></td>
+    `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // ── Sort table ────────────────────────────────────────────────────
+      let sortDir = {};
+      function sortTable(col) {
+        sortDir[col] = !sortDir[col];
+        const tbody = document.getElementById("tableBody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+        rows.sort((a, b) => {
+          const av = a.cells[col].innerText
+            .replace(/[R$\s.]/g, "")
+            .replace(",", ".")
+            .trim();
+          const bv = b.cells[col].innerText
+            .replace(/[R$\s.]/g, "")
+            .replace(",", ".")
+            .trim();
+          const an = parseFloat(av) || av;
+          const bn = parseFloat(bv) || bv;
+          return sortDir[col] ? (an > bn ? 1 : -1) : an < bn ? 1 : -1;
+        });
+        rows.forEach((r) => tbody.appendChild(r));
+      }
+
+      // ══════════════════════════════════════════════════════════════════
+      //  RECURRENCE
+      // ══════════════════════════════════════════════════════════════════
+      function renderRecurrence() {
+        const cats = {};
+        TRANSACTIONS.filter((t) => t.valor < 0 && t.cat).forEach((t) => {
+          if (!cats[t.cat]) cats[t.cat] = new Set();
+          cats[t.cat].add(t.mes);
+        });
+        const sorted = Object.entries(cats).sort(
+          (a, b) => b[1].size - a[1].size,
+        );
+        const container = document.getElementById("recurrenceList");
+        container.innerHTML = "";
+        sorted.forEach(([cat, meses], i) => {
+          const pct = (meses.size / 6) * 100;
+          const color = COLORS[i % COLORS.length];
+          const div = document.createElement("div");
+          div.style.cssText =
+            "display:flex;align-items:center;gap:16px;flex-wrap:wrap";
+          div.innerHTML = `
+      <div style="width:260px;font-size:12px;color:#94a3b8;flex-shrink:0">${cat}</div>
+      <div style="flex:1;min-width:120px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:11px;color:#64748b">${[...meses].join(", ")}</span>
+          <span style="font-size:11px;font-weight:600;color:${color}">${meses.size}/6 meses</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.07);border-radius:4px;height:6px">
+          <div style="width:${pct}%;height:6px;border-radius:4px;background:linear-gradient(90deg,${color},${color}88)"></div>
+        </div>
+      </div>
+    `;
+          container.appendChild(div);
+        });
+      }
+
+      // ══════════════════════════════════════════════════════════════════
+      //  FILTERS & EVENTS
+      // ══════════════════════════════════════════════════════════════════
+      document
+        .getElementById("filter-period")
+        .addEventListener("click", (e) => {
+          if (!e.target.dataset.period) return;
+          activePeriod = e.target.dataset.period;
+          document
+            .querySelectorAll("#filter-period .filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          e.target.classList.add("active");
+          drawCharts();
+          renderTable(document.getElementById("tableSearch").value);
+        });
+
+      document.getElementById("filter-type").addEventListener("click", (e) => {
+        if (!e.target.dataset.type) return;
+        activeType = e.target.dataset.type;
+        document
+          .querySelectorAll("#filter-type .filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        e.target.classList.add("active");
+        drawCharts();
+        renderTable(document.getElementById("tableSearch").value);
+      });
+
+      document.getElementById("tableSearch").addEventListener("input", (e) => {
+        renderTable(e.target.value);
+      });
+
+      document.getElementById("toggle-view").addEventListener("click", (e) => {
+        viewMode = viewMode === "abs" ? "pct" : "abs";
+        e.target.textContent =
+          viewMode === "abs" ? "Valores (R$)" : "Percentuais (%)";
+        e.target.classList.toggle("active");
+        drawCharts();
+      });
+
+      // ── Date ──────────────────────────────────────────────────────────
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+      document.getElementById("gen-date").textContent = "Gerado em " + dateStr;
+      document.getElementById("footer-date").textContent = dateStr;
+
+      // ── INIT ──────────────────────────────────────────────────────────
+      drawCharts();
+      renderTable();
+      renderRecurrence();
+    </script>
+  </body>
+</html>
